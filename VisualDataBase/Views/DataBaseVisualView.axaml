@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="VisualDataBase.Views.DataBaseVisualView"
+             xmlns:ui="clr-namespace:VisualDataBase.Views;assembly=VisualDataBase"
+             Width="900" Height="600">
+
+  <Grid RowDefinitions="auto, *">
+
+    <DockPanel Grid.Row="0">
+      <Menu>
+        <MenuItem Header="About">
+        </MenuItem>
+      </Menu>
+    </DockPanel>
+    
+    <TabControl Items="{Binding TableTabItems}" SelectedItem="{Binding CurrentTableTabItem}" Grid.Row="1">
+      <TabControl.Template>
+        <ControlTemplate>
+          <Border
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="{TemplateBinding CornerRadius}"
+            Background="{TemplateBinding Background}"
+            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+            VerticalAlignment="{TemplateBinding VerticalAlignment}">
+            <StackPanel>
+              <StackPanel Orientation="Horizontal">
+                <ItemsPresenter
+                    Name="PART_ItemsPresenter"
+                    Items="{TemplateBinding Items}"
+                    ItemsPanel="{TemplateBinding ItemsPanel}"
+                    ItemTemplate="{TemplateBinding ItemTemplate}">
+                </ItemsPresenter>
+
+                <Button Content="+" Command="{Binding $parent[Window].DataContext.ChangeToManagerRequests}"/>
+              </StackPanel>
+
+              <ContentPresenter
+                  Name="PART_SelectedContentHost"
+                  Margin="{TemplateBinding Padding}"
+                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                  Content="{TemplateBinding SelectedContent}"
+                  ContentTemplate="{TemplateBinding SelectedContentTemplate}">
+              </ContentPresenter>
+            </StackPanel>
+          </Border>
+        </ControlTemplate>
+      </TabControl.Template>
+
+      <TabControl.ItemTemplate>
+        <DataTemplate>
+          <DockPanel >
+            <TextBlock Text="{Binding Title}"/>
+            <Button Click="CloseTableTabItem" Content="x" IsEnabled="{Binding IsRequestTable}" />
+          </DockPanel>
+        </DataTemplate>
+      </TabControl.ItemTemplate>
+
+      <TabControl.ContentTemplate>
+        <DataTemplate>
+          <ui:TableTabItem/>
+        </DataTemplate>
+      </TabControl.ContentTemplate>
+    </TabControl>
+
+  </Grid>
+</UserControl>

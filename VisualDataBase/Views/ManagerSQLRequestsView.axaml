@@ -1,0 +1,255 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="VisualDataBase.Views.ManagerSQLRequestsView"
+             Width="900" Height="600">
+
+  <Grid RowDefinitions="auto, *, auto">
+
+    <DockPanel Grid.Row="0" Background="#f7f0eb">
+
+      <Button Command="{Binding ExecuteRequestCommand}">
+        <Image Source="/Assets/icon_go.png" Width="20" Stretch="Fill"></Image>
+      </Button>
+
+      <Button Command="{Binding SaveRequest}">
+        <Image Source="/Assets/icon_save.png" Width="20" Stretch="Fill"></Image>
+      </Button>
+
+      <Button Command="{Binding AddRequest}">
+        +
+      </Button>
+      
+      <Button Command="{Binding DeleteCurrentRequest}">
+        <Image Source="/Assets/icon_deleteBucket.png" Width="20" Stretch="Fill"></Image>
+      </Button>
+
+      <Button Command="{Binding $parent[Window].DataContext.ChangeToDataBaseVisual}">
+        Cancel
+      </Button>
+
+      <ContentControl Content="{Binding CurrentRequest}">
+        <ContentControl.ContentTemplate>
+          <DataTemplate>
+            <TextBox Text="{Binding Title}"/>
+          </DataTemplate>
+        </ContentControl.ContentTemplate>
+      </ContentControl>
+      
+    </DockPanel>
+
+    <Grid RowDefinitions="*, *, *" ColumnDefinitions="*, *, 2*" Grid.Row="1">
+
+      <ComboBox Items="{Binding AvailableTables}" SelectedItem="{Binding CurrentRequest.TypeSelectTable}" SelectionChanged="ComboBoxSelectTable" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="0">
+
+      </ComboBox>
+
+      <ComboBox Items="{Binding AvailableSelectFields}" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <CheckBox Content="{Binding Title}" IsChecked="{Binding IsSelected}" Click="FieldsCheckBoxOnClick" IsThreeState="False" />
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>
+
+      <Grid RowDefinitions="*, auto" Grid.Row="0" Grid.Column="2">
+        <DataGrid Name="SelectConditions" Items="{Binding CurrentSelectConditions}" SelectedItem="{Binding CurrentSelectCondition}" CanUserReorderColumns="False" Grid.Row="0">
+          <DataGrid.Columns>
+
+            <DataGridTemplateColumn Header="Operator" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding Operators}" SelectedItem="{Binding Operator}" HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Field" Width="*">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding Fields}" SelectedItem="{Binding Field}" HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Condition" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding OperatorCommands}" SelectedItem="{Binding OperatorCommand}" HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Value" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <TextBox Text="{Binding Value}"/>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+          </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid ColumnDefinitions="*, *" Grid.Row="1">
+          <Button Command="{Binding AddConditionCommand}" HorizontalAlignment="Stretch" Grid.Column="0">
+            <Button.CommandParameter>
+              <sys:Int32>0</sys:Int32>
+            </Button.CommandParameter>
+            Add
+          </Button>
+          <Button Command="{Binding RemoveCondition}" HorizontalAlignment="Stretch" Grid.Column="1">
+            <Button.CommandParameter>
+              <sys:Int32>0</sys:Int32>
+            </Button.CommandParameter>
+            Delete
+          </Button>
+        </Grid>
+      </Grid>
+
+
+      <ComboBox Items="{Binding AvailableSelectTables}" SelectedItem="{Binding TypeCurrentJoinTable}" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0"/>
+
+      <Grid RowDefinitions="auto, auto, auto" Grid.Row="1" Grid.Column="1">
+
+        <ComboBox Items="{Binding FieldsSelectRequest}" SelectedItem="{Binding CurrentFirstJoinOnField}" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Title}"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <ComboBox Items="{Binding OperatorCommands}" SelectedItem="{Binding CurrentCommandOperatorJoinOnField}" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="1"/>
+
+        <ComboBox Items="{Binding FieldsJoinRequest}" SelectedItem="{Binding CurrentSecondJoinOnField}" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="1">          
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding Title}"/>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+
+
+      </Grid>
+        
+      <Grid RowDefinitions="*, auto" Grid.Row="1" Grid.Column="2">
+        <DataGrid Name="JoinConditions" Items="{Binding JoinConditions}" CanUserReorderColumns="False" Grid.Row="0">
+          <DataGrid.Columns>
+
+            <DataGridTemplateColumn Header="Operator" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding Operators}"  HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Field" Width="*">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding TableFields}"  HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Condition" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding Conditions}"  HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Value" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <TextBox Text="{Binding ValueCondition}"/>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+          </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid ColumnDefinitions="*, *" Grid.Row="1">
+          <Button Command="{Binding AddConditionCommand}" HorizontalAlignment="Stretch" Grid.Column="0">
+            <Button.CommandParameter>
+              <sys:Int32>1</sys:Int32>
+            </Button.CommandParameter>
+            Add</Button>
+          <Button HorizontalAlignment="Stretch" Grid.Column="1">Delete</Button>
+        </Grid>
+        
+      </Grid>
+     
+
+
+      <ComboBox SelectedIndex="0" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0">
+        <ComboBoxItem>
+          <TextBlock Text="Group by"/>
+        </ComboBoxItem>
+      </ComboBox>
+
+      <Grid RowDefinitions="*, auto" Grid.Row="2" Grid.Column="2">
+        <DataGrid Name="GroupByConditions" Items="{Binding GroupByConditions}" CanUserReorderColumns="False" Grid.Row="0">
+          <DataGrid.Columns>
+
+            <DataGridTemplateColumn Header="Operator" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding Operators}"  HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Field" Width="*">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding TableFields}"  HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Condition" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <ComboBox Items="{Binding Conditions}"  HorizontalAlignment="Stretch" />
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Value" Width="auto">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <TextBox Text="{Binding ValueCondition}"/>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+          </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid ColumnDefinitions="*, *" Grid.Row="1">
+          <Button HorizontalAlignment="Stretch" Grid.Column="0">Add</Button>
+          <Button HorizontalAlignment="Stretch" Grid.Column="1">Delete</Button>
+        </Grid>
+      </Grid>
+
+    </Grid>
+
+
+    <ComboBox Name="HistoryRequestsComboBox" Items="{Binding Requests}" SelectedItem="{Binding CurrentRequest}" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch" Grid.Row="2">
+      <ComboBox.ItemTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding Title}"/>
+        </DataTemplate>
+      </ComboBox.ItemTemplate>
+    </ComboBox>
+
+  </Grid>
+
+</UserControl>
